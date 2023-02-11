@@ -129,7 +129,7 @@ export default function Home(props) {
                             <div >
                                 {props.data.parcels.map((parcel) => (
                                     <div key={parcel.id}>
-                                        <h2>{parcel.ParcelName}</h2>
+                                        <h2 className='text-white'>{parcel.ParcelName}</h2>
                                         <p>{parcel.Parcel_orderNo}</p>
                                     </div>
                                 ))}
