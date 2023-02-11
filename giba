@@ -1,0 +1,8 @@
+ {/* Serach Bar */}
+        <div className='border-2 items-center flex rounded-full shadow-sm my-4'>
+          <input
+            className='flex-grow pl-5 bg-transparent outline-none text-l'
+            type="text"
+            placeholder="Type Anything"
+          />
+          </div>
