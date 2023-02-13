@@ -27,7 +27,8 @@ export default function Home() {
         username,
         contact,
         password,
-        schoolCode
+        schoolCode,
+        Identity
       })
     });
 
@@ -40,7 +41,8 @@ export default function Home() {
         username,
         contact,
         password,
-        schoolCode
+        schoolCode,
+        Identity
       }));
       
     } else if (data[0].message1!=='success'){
@@ -72,10 +74,10 @@ export default function Home() {
                             <li><label>Identity</label></li>
                             <div className='flex flex-row justify-start'>
                             <li className='pt-1'><input className=" block  font-normal text-gray-700 bg-white  border border-solid border-gray-300  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='radio' name='contact' id='Student' onChange={e=>setContact(e.target.value)} placeholder="name@email.com or +44" ></input></li>
+                                type='radio' name='contact' id='Student' onChange={e=>setiIdentity(e.target.id)}  ></input></li>
                                 <li className='' ><label className='pr-20 ' for='Student'>Student</label></li>
                                 <li className='pt-1'><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='radio' name='contact' id='Student' onChange={e=>setContact(e.target.value)} placeholder="name@email.com or +44" ></input></li>
+                                type='radio' name='Identity' id='Manager' onChange={e=>setiIdentity(e.target.id)}  ></input></li>
                                 <li ><label className='pr-20' for='Student'>Manager</label></li>
                             </div>
                             <li><label>Email or phoneNO</label></li>

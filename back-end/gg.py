@@ -29,6 +29,7 @@ class UserIn(BaseModel):
     contact: str
     password: str
     schoolCode: str
+    Identity:str
 def validate_username(username: str):
     if len(username) < 3 or len(username) > 10:
         message1 = {
@@ -79,6 +80,7 @@ async def register(user: UserIn, response: Response):
     response.set_cookie(key="username", value=user.username)
     response.set_cookie(key="contact", value=user.contact)
     response.set_cookie(key="schoolCode", value=user.schoolCode)
+    response.set_cookie(key='Identity',value=user.Identity)
     # Return a success response
     message1=validate_username(user.username)
     message2=validate_password(user.password)
@@ -95,12 +97,16 @@ async def register(user: UserIn, response: Response):
 async def login2(user: UserLogin,response: Response):
     # Perform your registration logic here, for example, saving the user to a database
     # ...
-    response.set_cookie(key="username", value=user.username)
-    # Return a success response
-    success = {
-        "message": "success"
-    }
-    return success
+    session = SessionLocal()
+    db_user = session.query(Student).filter(Student.username == user.username).first()
+    session.close()
+    if db_user is None:
+        return {"message": "user not found, please register first"}
+    if db_user.password != user.password:
+        return {"message": "incorrect password"}
+
+    response.set_cookie(key="username", value=db_user.username)
+    return {"message": "success"}
 
 @app.get("/Homepage")
 async def homepage(request: Request):
@@ -124,7 +130,18 @@ async def homepage(request: Request):
     parcels = cursor.fetchall()
     column_names = [column[0] for column in cursor.description]
     parcels = [dict(zip(column_names, row)) for row in parcels]
-    print(parcels)
+    
+    print(parcels[3]['is_issued'])
+    for i in range(0,len(parcels)):
+        if parcels[i]['is_issued']==1:
+            parcels[i]['is_issued']='have issued'
+        else:
+            parcels[i]['is_issued']='not issued'
+    for i in range(0,len(parcels)):
+        if parcels[i]['is_deliveried']==1:
+            parcels[i]['is_deliveried']='have deliveried'
+        else:
+            parcels[i]['is_deliveried']='not deliveried'
 
     # Close the connection to the database
     cursor.close()

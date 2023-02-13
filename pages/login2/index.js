@@ -65,7 +65,7 @@ export default function index(){
                         
                     </ul>
 
-
+                    <h1>{message}</h1>
                 </form>
                 <div >
              <button onClick={submitFrom} className="w-64 h-12   bg-emerald-400 p-2 rounded-full shadow-sm">Login</button>

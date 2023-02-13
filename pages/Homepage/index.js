@@ -21,21 +21,7 @@ export default function Home(props) {
 
     }
     console.log(props.data)
-    // console.log(props.cookies);
-
-    // const [parcels, setParcels] = useState([]);
-
-    // useEffect(() => {
-    //     const fetchParcels = async () => {
-    //         const response = await fetch('/api/Homepage');
-    //         const data = await response.json();
-    //         setParcels(data.parcels);
-    //     };
-
-    //     fetchParcels();
-    // }, []);
-
-    // console.log(parcels);
+    
 
     return (
         <div className='bg-gradient-to-l from-slate-500 to-indigo-500  '>
@@ -105,7 +91,7 @@ export default function Home(props) {
                                     </tr>
                                     <tr className='border-b-2'>
                                         <td className='text-gray-300 pl-5 pt-5'>Identity</td>
-                                        <td className='pl-96 pt-5'>student</td>
+                                        <td className='pl-96 pt-5'>{props.cookies.Identity}</td>
                                     </tr>
                                     <tr className='border-b-2'>
                                         <td className='text-gray-300 pl-5 pt-5'>Schoolcode</td>
@@ -124,17 +110,24 @@ export default function Home(props) {
                 )}
                 {currentContent === 2 && (
                     <div>
-                        <div className='pt-10 flex flex-row'>
+                        <div className='pt-10 flex flex-col'>
                             <h1 className='text-5xl text-white font-bold pl-5 '>Parcels situation</h1>
-                            <div >
+                            
+                            <div className='pt-6 '>
+
                                 {props.data.parcels.map((parcel) => (
-                                    <div key={parcel.id}>
-                                        <h2 className='text-white'>{parcel.ParcelName}</h2>
-                                        <p>{parcel.Parcel_orderNo}</p>
+                                    <div className='pt-1 pl-4 flex flex-row' key={parcel.id}>
+                                        
+                                        <h2 className='bg-white pl-3 p-3 border-r-4'>{parcel.id}</h2>
+                                        <h2 className='bg-white w-60 border-r-4 p-3'>{parcel.ParcelName}</h2>
+                                        <h2 className='bg-white max-w-md p-3 border-r-4 pl-10'>{parcel.Parcel_orderNo}</h2>
+                                        <h2 className='bg-white border-r-4 '>{parcel.is_deliveried}</h2>
+                                        <h2 className='bg-white  '>{parcel.is_issued}</h2>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                            </div>
+                       
                         <div>
 
                         </div>
