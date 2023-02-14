@@ -20,7 +20,7 @@ export default function index(){
       body: JSON.stringify({
         username,
         password,
-        selectedIdentity
+        selectedIdentity:selectedIdentity
       })
     });
 
@@ -32,7 +32,7 @@ export default function index(){
        localStorage.setItem('userData', JSON.stringify({
         username,
         password,
-        selectedIdentity
+        selectedIdentity:selectedIdentity
         
       }));
       

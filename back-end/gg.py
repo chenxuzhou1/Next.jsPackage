@@ -117,14 +117,21 @@ async def login2(user: UserLogin,response: Response):
     # Perform your registration logic here, for example, saving the user to a database
     # ...
     session = SessionLocal()
-    db_user = session.query(Student).filter(Student.username == user.username).first()
+    db_user1 = session.query(Student).filter(Student.username == user.username).first()
+    db_user2 = session.query(Manager).filter(Manager.username == user.username).first()
     session.close()
-    if db_user is None:
+    if db_user1 is None:
         return {"message": "user not found, please register first"}
-    if db_user.password != user.password:
+    if db_user1.password != user.password:
+        return {"message": "incorrect password"}
+    if db_user2 is None:
+        return {"message": "user not found, please register first"}
+    if db_user2.password != user.password:
         return {"message": "incorrect password"}
 
-    response.set_cookie(key="username", value=db_user.username)
+    response.set_cookie(key="username", value=db_user1.username)
+    response.set_cookie(key="username", value=db_user2.username)
+    response.set_cookie(key='Identity',value=user.selectedIdentity)
     return {"message": "success"}
 
 @app.get("/Homepage")
@@ -167,4 +174,43 @@ async def homepage(request: Request):
     conn.close()
 
     return {"parcels": parcels}
+@app.get('/Mhomepage')
+async def homepage(request: Request):
+    # Connect to the database
+    conn = mysql.connector.connect(
+        host="containers-us-west-111.railway.app",
+        user="root",
+        password="MCvjStFQVRQQuezriDR6",
+        database="railway",
+        port=5542
+    )
 
+    cursor = conn.cursor()
+
+    # Retrieve the package information for the user
+    schoolCode = request.cookies.get("schoolCode")
+    
+    query = f"SELECT * FROM Parcels WHERE Receiving_schoolCode='{schoolCode}'"
+    cursor.execute(query)
+    
+    parcels = cursor.fetchall()
+    column_names = [column[0] for column in cursor.description]
+    parcels = [dict(zip(column_names, row)) for row in parcels]
+    
+    print(parcels[3]['is_issued'])
+    for i in range(0,len(parcels)):
+        if parcels[i]['is_issued']==1:
+            parcels[i]['is_issued']='have issued'
+        else:
+            parcels[i]['is_issued']='not issued'
+    for i in range(0,len(parcels)):
+        if parcels[i]['is_deliveried']==1:
+            parcels[i]['is_deliveried']='have deliveried'
+        else:
+            parcels[i]['is_deliveried']='not deliveried'
+
+    # Close the connection to the database
+    cursor.close()
+    conn.close()
+
+    return {"parcels": parcels}

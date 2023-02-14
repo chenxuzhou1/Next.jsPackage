@@ -8,13 +8,13 @@ export default function Welcome(props) {
   const router = useRouter();
   const userData = JSON.parse(localStorage.getItem('userData'));
   const [redirectSeconds, setRedirectSeconds] = useState(5);
-  
+  console.log(props.cookies.selectIdentity)
   
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log(redirectSeconds);
+      
       setRedirectSeconds((redirectSeconds) => redirectSeconds - 1);
-      console.log(redirectSeconds);
+      
       
     }, 1000)
    
@@ -29,6 +29,12 @@ export default function Welcome(props) {
     else if (redirectSeconds == 0 && props.cookies.Identity=='Manager') {
       router.push("/Mhomepage")
     }
+    else if (redirectSeconds == 0 && props.cookies.selectIdentity=='Manager'){
+    router.push("/Mhomepage")
+    }
+    else if (redirectSeconds == 0 && props.cookies.selectIdentity=='Student'){
+      router.push("/Homepage")
+      }
     return () => {
       clearTimeout(timer);
     }
