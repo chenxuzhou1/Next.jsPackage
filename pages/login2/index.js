@@ -1,11 +1,13 @@
 import Router from 'next/router'
 import { useState } from 'react'
 export default function index(){
-   
+    const [selectedIdentity, setSelectedIdentity] = useState('');
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [message,setMessage]=useState('') 
-  
+    const handleIdentityChange = (event) => {
+      setSelectedIdentity(event.target.id);
+    };
     async function submitFrom(e) {
       e.preventDefault();
 
@@ -17,18 +19,21 @@ export default function index(){
       },
       body: JSON.stringify({
         username,
-        password
+        password,
+        selectedIdentity
       })
     });
 
     const data = await response.json();
-   
+    console.log(data)
     if (data.message === 'success') {
       setMessage('Registration Successful!');
        Router.push("/Welcome")
        localStorage.setItem('userData', JSON.stringify({
         username,
-        password
+        password,
+        selectedIdentity
+        
       }));
       
     } else {
@@ -58,7 +63,15 @@ export default function index(){
                         <li><label>Name</label></li>
                         <li><input className="w-96 form-control block px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             type='text' name='username' value={username} placeholder="Your name" onChange={e => setUsername(e.target.value)} /></li>
-                        
+                        <li><label>Identity</label></li>
+                            <div className='flex flex-row justify-start'>
+                            <li className='pt-1'><input className=" block  font-normal text-gray-700 bg-white  border border-solid border-gray-300  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                type='radio' name='Student' id='Student' onChange={handleIdentityChange} checked={selectedIdentity === 'Student'}  ></input></li>
+                                <li className='' ><label className='pr-20 ' for='Student'>Student</label></li>
+                                <li className='pt-1'><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                type='radio' name='Manager' id='Manager' onChange={handleIdentityChange} checked={selectedIdentity === 'Manager'} ></input></li>
+                                <li ><label className='pr-20' for='Student'>Manager</label></li>
+                                </div>
                         <li><label>Password</label></li>
                         <li><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                             type='password' name='password' value={password} placeholder="Your password" onChange={e => setPassword(e.target.value)} /></li>

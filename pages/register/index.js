@@ -8,10 +8,13 @@ export default function Home() {
     const [password, setPassword] = useState('')
     const [message1, setMessage1] = useState('')
     const [message2, setMessage2] = useState('')
-    const [Identity,setiIdentity]=useState('')
+    const [selectedIdentity, setSelectedIdentity] = useState('');
     const [contact,setContact]=useState('')
     const [schoolCode,setSchoolcode]=useState('')
-    
+    const [message3, setMessage3] = useState('')
+    const handleIdentityChange = (event) => {
+      setSelectedIdentity(event.target.id);
+    };
    
     async function submitFrom(e) {
      
@@ -28,13 +31,13 @@ export default function Home() {
         contact,
         password,
         schoolCode,
-        Identity
+        Identity: selectedIdentity
       })
     });
 
     const data = await response.json();
     console.log(data)
-    if (data[0].message1 === 'success' && data[1].message2==='success') {
+    if (data[0].message1 === 'success' && data[1].message2==='success'&& data[2]=='') {
       setMessage1('Registration Successful!');
        Router.push("/Welcome")
        localStorage.setItem('userData', JSON.stringify({
@@ -42,7 +45,7 @@ export default function Home() {
         contact,
         password,
         schoolCode,
-        Identity
+        Identity: selectedIdentity
       }));
       
     } else if (data[0].message1!=='success'){
@@ -51,9 +54,12 @@ export default function Home() {
     else if (data[1].message2!=='success'){
       setMessage2(data[1].message2)
     }
+    else if (data[2]=='This username is already taken'){
+      setMessage3(data[2])
+    }
   } catch (error) {
-    setMessage1('Registration failed. Please try again later.');
-    setMessage2('Registration failed. Please try again later.');
+    setMessage3('Registration failed. Please try again later.');
+    setMessage3('Registration failed. Please try again later.');
   }
             
    
@@ -71,13 +77,14 @@ export default function Home() {
                             <li><input className="w-96 form-control block px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                 type='text' name='username' value={username} onChange={(event) => setUsername(event.target.value)} placeholder="Your name"  /></li>
                             <h1 className='text-red-700'>{message1}</h1>
+                            <h1 className='text-red-700'>{message3}</h1>
                             <li><label>Identity</label></li>
                             <div className='flex flex-row justify-start'>
                             <li className='pt-1'><input className=" block  font-normal text-gray-700 bg-white  border border-solid border-gray-300  focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='radio' name='contact' id='Student' onChange={e=>setiIdentity(e.target.id)}  ></input></li>
+                                type='radio' name='contact' id='Student' onChange={handleIdentityChange} checked={selectedIdentity === 'Student'}  ></input></li>
                                 <li className='' ><label className='pr-20 ' for='Student'>Student</label></li>
                                 <li className='pt-1'><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='radio' name='Identity' id='Manager' onChange={e=>setiIdentity(e.target.id)}  ></input></li>
+                                type='radio' name='Identity' id='Manager' onChange={handleIdentityChange} checked={selectedIdentity === 'Manager'} ></input></li>
                                 <li ><label className='pr-20' for='Student'>Manager</label></li>
                             </div>
                             <li><label>Email or phoneNO</label></li>

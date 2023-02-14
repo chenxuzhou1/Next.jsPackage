@@ -13,6 +13,13 @@ class Student(Base):
     username = Column(String)
     contact = Column(String)
     schoolCode = Column(String)
+class Manager(Base):
+    __tablename__ = "Manager"
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    password = Column(String)
+    username = Column(String)
+    contact = Column(String)
+    schoolCode = Column(String)
 
 engine = create_engine("mysql+pymysql://root:MCvjStFQVRQQuezriDR6@containers-us-west-111.railway.app:5542/railway")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -67,14 +74,26 @@ def validate_password(password: str):
 class UserLogin(BaseModel):
     username:str
     password:str
+    selectedIdentity:str
 
 @app.post("/register")
 async def register(user: UserIn, response: Response):
     # Perform your registration logic here, for example, saving the user to a database
     # ...
+    message3=''
     session = SessionLocal()
-    db_user = Student(username=user.username, contact=user.contact, password=user.password, schoolCode=user.schoolCode)
-    session.add(db_user)
+    existing_user1 = session.query(Student).filter(Student.username == user.username).first()
+    if existing_user1:
+        message3 = "This username is already taken"
+    existing_user2 = session.query(Manager).filter(Manager.username == user.username).first()
+    if existing_user2:
+        message3 = "This username is already taken"
+    db_user1 = Student(username=user.username, contact=user.contact, password=user.password, schoolCode=user.schoolCode)
+    db_user2= Manager(username=user.username,contact=user.contact, password=user.password, schoolCode=user.schoolCode)
+    if user.Identity=='Student' and not existing_user1:
+        session.add(db_user1)
+    elif not existing_user2:
+        session.add(db_user2)
     session.commit()
     session.close()
     response.set_cookie(key="username", value=user.username)
@@ -85,7 +104,7 @@ async def register(user: UserIn, response: Response):
     message1=validate_username(user.username)
     message2=validate_password(user.password)
     
-    return message1,message2
+    return message1,message2,message3
     
 
 

@@ -40,7 +40,8 @@ return(
   </div>
   
 </div>
-<h1 className='text-3xl text-white pl-20 pt-10'>FZH's Package List</h1>
+<h1 className='text-3xl text-white pl-20 pt-10'>{props.cookies.username}'s Stack Package List</h1>
+    <h3>{props.cookies.schoolCode}</h3>
     </div>
 )
 }

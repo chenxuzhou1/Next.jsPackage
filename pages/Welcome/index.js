@@ -18,12 +18,16 @@ export default function Welcome(props) {
       
     }, 1000)
    
-    if (redirectSeconds == 0) {
+    if (redirectSeconds == 0 && props.cookies.Identity=='Student') {
       
       router.push("/Homepage")
+    
       
   
       return;
+    }
+    else if (redirectSeconds == 0 && props.cookies.Identity=='Manager') {
+      router.push("/Mhomepage")
     }
     return () => {
       clearTimeout(timer);
