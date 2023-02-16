@@ -21,7 +21,7 @@ class Manager(Base):
     contact = Column(String)
     schoolCode = Column(String)
 
-engine = create_engine("mysql+pymysql://root:MCvjStFQVRQQuezriDR6@containers-us-west-111.railway.app:5542/railway")
+engine = create_engine("mysql+pymysql://root:6pY5tRcEwgpWPErp8Qs6@containers-us-west-111.railway.app:5542/railway")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 app = FastAPI()
@@ -75,6 +75,7 @@ class UserLogin(BaseModel):
     username:str
     password:str
     selectedIdentity:str
+   
 
 @app.post("/register")
 async def register(user: UserIn, response: Response):
@@ -120,19 +121,20 @@ async def login2(user: UserLogin,response: Response):
     db_user1 = session.query(Student).filter(Student.username == user.username).first()
     db_user2 = session.query(Manager).filter(Manager.username == user.username).first()
     session.close()
-    if db_user1 is None:
-        return {"message": "user not found, please register first"}
-    if db_user1.password != user.password:
-        return {"message": "incorrect password"}
-    if db_user2 is None:
-        return {"message": "user not found, please register first"}
-    if db_user2.password != user.password:
-        return {"message": "incorrect password"}
-
-    response.set_cookie(key="username", value=db_user1.username)
-    response.set_cookie(key="username", value=db_user2.username)
+    if user.selectedIdentity=="Student" and (db_user1 is None or db_user1.password != user.password):
+        return {"message": "Student credential matches failed, please check and try again!"}
+    elif user.selectedIdentity=="Manager" and (db_user2 is None or db_user2.password != user.password):
+        return {"message": "Manager credential matches failed, please check and try again!"}
+    
+    if user.selectedIdentity=="Student":
+        response.set_cookie(key="username", value=db_user1.username)
+        response.set_cookie(key="contact", value=db_user1.contact)
+    else:
+        response.set_cookie(key="username", value=db_user2.username)
     response.set_cookie(key='Identity',value=user.selectedIdentity)
+   
     return {"message": "success"}
+    
 
 @app.get("/Homepage")
 async def homepage(request: Request):
@@ -140,7 +142,7 @@ async def homepage(request: Request):
     conn = mysql.connector.connect(
         host="containers-us-west-111.railway.app",
         user="root",
-        password="MCvjStFQVRQQuezriDR6",
+        password="6pY5tRcEwgpWPErp8Qs6",
         database="railway",
         port=5542
     )
@@ -149,26 +151,21 @@ async def homepage(request: Request):
 
     # Retrieve the package information for the user
     username = request.cookies.get("username")
-    print(username)
-    query = f"SELECT * FROM Parcels WHERE Recipient_student='{username}'"
+    query = f"SELECT * FROM Parcel WHERE account_name='{username}'"
     cursor.execute(query)
-    
     parcels = cursor.fetchall()
     column_names = [column[0] for column in cursor.description]
     parcels = [dict(zip(column_names, row)) for row in parcels]
     
-    print(parcels[3]['is_issued'])
-    for i in range(0,len(parcels)):
-        if parcels[i]['is_issued']==1:
-            parcels[i]['is_issued']='have issued'
-        else:
-            parcels[i]['is_issued']='not issued'
-    for i in range(0,len(parcels)):
-        if parcels[i]['is_deliveried']==1:
-            parcels[i]['is_deliveried']='have deliveried'
-        else:
-            parcels[i]['is_deliveried']='not deliveried'
-
+    if parcels is None:
+        return {'parcels':'No parcels about you'}
+    else:
+        for i in range(0,len(parcels)):
+            if parcels[i]['pickup_status']==1:
+                parcels[i]['pickup_status']='have deliveried'
+            else:
+                parcels[i]['pickup_status']='not deliveried'
+    print(parcels)
     # Close the connection to the database
     cursor.close()
     conn.close()
@@ -180,7 +177,7 @@ async def homepage(request: Request):
     conn = mysql.connector.connect(
         host="containers-us-west-111.railway.app",
         user="root",
-        password="MCvjStFQVRQQuezriDR6",
+        password="6pY5tRcEwgpWPErp8Qs6",
         database="railway",
         port=5542
     )
@@ -190,27 +187,24 @@ async def homepage(request: Request):
     # Retrieve the package information for the user
     schoolCode = request.cookies.get("schoolCode")
     
-    query = f"SELECT * FROM Parcels WHERE Receiving_schoolCode='{schoolCode}'"
+    query = f"SELECT * FROM Parcel WHERE Receiving_schoolCode='{schoolCode}'"
     cursor.execute(query)
     
     parcels = cursor.fetchall()
     column_names = [column[0] for column in cursor.description]
     parcels = [dict(zip(column_names, row)) for row in parcels]
-    
-    print(parcels[3]['is_issued'])
-    for i in range(0,len(parcels)):
-        if parcels[i]['is_issued']==1:
-            parcels[i]['is_issued']='have issued'
-        else:
-            parcels[i]['is_issued']='not issued'
-    for i in range(0,len(parcels)):
-        if parcels[i]['is_deliveried']==1:
-            parcels[i]['is_deliveried']='have deliveried'
-        else:
-            parcels[i]['is_deliveried']='not deliveried'
+    if parcels is None:
+        return {'parcels':'No parcels about you'}
+    else:
+        for i in range(0,len(parcels)):
+           if parcels[i]['pickup_status']==1:
+            parcels[i]['pickup_status']='have deliveried'
+           else:
+            parcels[i]['pickup_status']='not deliveried'
 
     # Close the connection to the database
-    cursor.close()
-    conn.close()
+           cursor.close()
+           conn.close()
 
-    return {"parcels": parcels}
+           return {"parcels": parcels}
+
