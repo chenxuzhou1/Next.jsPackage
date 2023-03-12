@@ -1,4 +1,4 @@
-import Title from '../../components/Header/Title.jsx'
+import Title from '../../../components/Header/Title.jsx'
 import cookie from 'cookie'
 import Router from 'next/router'
 export default function packages(props) {
