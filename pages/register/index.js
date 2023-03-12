@@ -9,7 +9,9 @@ export default function Home() {
     const [message1, setMessage1] = useState('')
     const [message2, setMessage2] = useState('')
     const [selectedIdentity, setSelectedIdentity] = useState('');
-    const [contact,setContact]=useState('')
+    const [showPassword, setShowPassword] = useState(false);   
+    const [email,setEmail]=useState('')
+    const [phoneNo,setPhoneNo]=useState('')
     const [schoolCode,setSchoolcode]=useState('')
     const [message3, setMessage3] = useState('')
     const handleIdentityChange = (event) => {
@@ -28,7 +30,8 @@ export default function Home() {
       },
       body: JSON.stringify({
         username,
-        contact,
+        email,
+        phoneNo,
         password,
         schoolCode,
         Identity: selectedIdentity
@@ -42,7 +45,8 @@ export default function Home() {
        Router.push("/Welcome")
        localStorage.setItem('userData', JSON.stringify({
         username,
-        contact,
+        email,
+        phoneNo,
         password,
         schoolCode,
         Identity: selectedIdentity
@@ -87,16 +91,24 @@ export default function Home() {
                                 type='radio' name='Identity' id='Manager' onChange={handleIdentityChange} checked={selectedIdentity === 'Manager'} ></input></li>
                                 <li ><label className='pr-20' for='Student'>Manager</label></li>
                             </div>
-                            <li><label>Email or phoneNO</label></li>
+                            <li><label>Email</label></li>
                             <li><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='text' name='contact'  value={contact} onChange={e=>setContact(e.target.value)} placeholder="name@email.com or +44" /></li>
+                                type='text' name='email'  value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@email.com" /></li>
+                                <li><label>phoneNO</label></li>
+                            <li><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                type='text' name='phoneNo'  value={phoneNo} onChange={e=>setPhoneNo(e.target.value)} placeholder="+44" /></li>
                             <li><label>Password</label></li>
                             <li><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='password' name='password' value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Your password"  /></li>
-                            <h1 className='text-red-700'>{message2}</h1>
-                            <li><label>Your school code</label></li>
+                                type={showPassword ? "text" : "password"} onMouseDown={() => setShowPassword(true)}
+                                onMouseUp={() => setShowPassword(false)} name='password' value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Your password"  /></li>
+                            <li><label>Confirm your Password</label></li>
                             <li><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='text' name='schoolCode' value={schoolCode} onChange={(event) => setSchoolcode(event.target.value)} placeholder="Your password"/></li>
+                                type={showPassword ? "text" : "password"} onMouseDown={() => setShowPassword(true)}
+                                onMouseUp={() => setShowPassword(false)} name='password' placeholder="Confirm your password"  /></li>
+                            <h1 className='text-red-700'>{message2}</h1>
+                            <li><label>Schoolcode</label></li>
+                            <li><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                type='text' name='schoolCode' value={schoolCode} onChange={(event) => setSchoolcode(event.target.value)} placeholder="Your schoolcode"/></li>
                         </ul>
 
 

@@ -3,14 +3,20 @@ import ListMenu from '../components/Header/Listmenu.jsx'
 import Introduction from '../components/Content/Introduction'
 import Parcelsit from '../components/Content/Parcelsit'
 import Router from 'next/router'
+import qr from 'qrcode'
 
+import { useEffect, useState } from 'react'
+import { isTemplateLiteralTypeNode } from 'typescript'
 export default function Home() {
+   
+  
+  
   return (
     <div className='bg-gradient-to-l from-slate-500 to-indigo-500 '>
 
       {/* Header */}
 
-
+      
       <div className='grid grid-cols-2 p-1 sticky top-0 z-50 bg-white' >
         <div className='flex'>
           <div><Title /></div>
@@ -29,7 +35,7 @@ export default function Home() {
         <ul className='flex select-none content-center items-center'>
           <li onClick={()=>Router.push("/packages")} className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Your Package</li>
           <li className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'> Contact</li>
-          <li className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Client DownLoad</li>
+          <li onClick={()=>Router.push("/downloadQRcode")} className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Client DownLoad</li>
 
         </ul>
         {/* 2 Buttons*/}

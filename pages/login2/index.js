@@ -4,6 +4,7 @@ export default function index(){
     const [selectedIdentity, setSelectedIdentity] = useState('');
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false);   
     const [message,setMessage]=useState('') 
     const handleIdentityChange = (event) => {
       setSelectedIdentity(event.target.id);
@@ -32,7 +33,8 @@ export default function index(){
        localStorage.setItem('userData', JSON.stringify({
         username,
         password,
-        selectedIdentity:selectedIdentity
+        selectedIdentity:selectedIdentity,
+       
         
       }));
       
@@ -74,7 +76,8 @@ export default function index(){
                                 </div>
                         <li><label>Password</label></li>
                         <li><input className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                            type='password' name='password' value={password} placeholder="Your password" onChange={e => setPassword(e.target.value)} /></li>
+                            type={showPassword ? "text" : "password"} onMouseDown={() => setShowPassword(true)}
+                            onMouseUp={() => setShowPassword(false)} name='password' value={password} placeholder="Your password" onChange={e => setPassword(e.target.value)} /></li>
                         
                     </ul>
 
