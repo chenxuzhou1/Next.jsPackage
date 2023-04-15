@@ -91,7 +91,7 @@ export default function Home(props) {
                 console.log(passwordMessage)
             }
             else {
-                setPasswordMessage2("your current password is wrong")
+                setPasswordMessage1("your current password is wrong")
                 console.log(passwordMessage)
             }
         } catch (error) {
@@ -648,14 +648,7 @@ export default function Home(props) {
                         <h2 className='text-xl font-bold pl-5 pt-5'>Current password</h2>
                         <div className='pl-5'>
                             <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='password' placeholder=" " value={oldpassword} onChange={(event) => setOldpassword(event.target.value)} onBlur={() => {
-                                    if (oldpassword !== props.cookies.password) {
-                                        setPasswordMessage1("Current password is wrong");
-                                    }
-                                    else {
-                                        setPasswordMessage1("")
-                                    }
-                                }} />
+                                type='password' placeholder=" " value={oldpassword} onChange={(event) => setOldpassword(event.target.value)}  />
                         </div>
                         <h2 className='text-xl pl-5 pt-5 text-red-500'>{passwordMessage1}</h2>
                         <h2 className='text-xl font-bold pl-5 pt-5'>New password</h2>

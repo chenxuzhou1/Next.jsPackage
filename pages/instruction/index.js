@@ -38,7 +38,7 @@ export default function packages(props) {
         document.cookie = cookie.serialize('schoolCode', '', { expires: new Date(0) });
 
 
-        Router.push("")
+        Router.push("https://next-js-package-dhmy.vercel.app")
     }
 
 
