@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import qr from 'qrcode'
 import Router from 'next/router'
 import MobileDetect from 'mobile-detect';
-
+import cookie from 'cookie'
 
 
 
@@ -32,7 +32,7 @@ export default function test(props) {
     
 
     try {
-      const response = await fetch('/api/login2', {
+      const response = await fetch('/api/test2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ export default function test(props) {
       <div className="flex flex-col justify-center place-items-center h-screen pt-10 rounded-xl shadow-lg'bg-gradient-to-l from-slate-500 to-indigo-500 ">
 
 
-        <h1 onClick={() => Router.push('/login')} className='text-gray-300 pl-80 '>Login</h1>
+        <h1 className='text-gray-300 pl-72 '>Hello,Manager {props.cookies.username}</h1>
         <h2 className='text-red-500 animate-pulse pb-12 pr-20 text-3xl'>A new package Coming!</h2>
 
         <form className='pb-80'>
@@ -137,8 +137,14 @@ export default function test(props) {
                 {showPopup && (
                   <div className='fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center'>
                     <div className='bg-white rounded-lg p-8'>
-                      <h2 onClick={togglePopup} className='text-2xl font-bold mb-4'>Please Log in your account first</h2>
-                    
+                      <h2 className='text-2xl font-bold mb-4'>Are you sure to add this parcel ?</h2>
+                      {/* Add form elements here */}
+                      <div className='flex justify-around'>
+                        <button onClick={togglePopup} className='bg-gray-400 p-3 rounded-full shadow-sm text-white'>Cancel</button>
+                        <button onClick={submitFrom} className='bg-blue-400 p-3 rounded-full shadow-sm text-white'>Sure</button>
+
+                      </div>
+                      <h1 className='text-red-500'>{message}</h1>
                     </div>
                   </div>
                 )}
@@ -153,13 +159,28 @@ export default function test(props) {
 
   )
 }
-export async function getStaticProps() {
+
+export async function getServerSideProps(context) {
   const data = await fetch('http://127.0.0.1:3000/data.json')
   const json = await data.json()
+  const { req } = context
+  let cookies = req.headers.cookie
+  cookies = cookie.parse(req.headers.cookie || '')
+  console.log(cookies)
+  const response = await fetch('http://127.0.0.1:3000/api/test2', {
+      headers: {
+          'Cookie': req.headers.cookie
+      }
+  });
+  const data1 = await response.json();
 
+  console.log(data1);
   return {
-    props: {
-      posts: json.posts
-    }
+      props: {
+          cookies,
+          data1,
+          posts: json.posts
+      }
   }
 }
+

@@ -35,7 +35,7 @@ export default function Home() {
         <ul className='flex select-none content-center items-center'>
           <li onClick={()=>Router.push("/packages")} className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Your Package</li>
           <li className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'> Contact</li>
-          <li onClick={()=>Router.push("/downloadQRcode")} className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Client DownLoad</li>
+          <li className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Coopration</li>
 
         </ul>
         {/* 2 Buttons*/}
@@ -58,7 +58,7 @@ export default function Home() {
       {/* Content2*/}
       <div className='grid grid-cols-2 p-9 animate-pulse'>
         <div >
-          <img src='edg.gif' alt='gg'></img>
+          <img className='pl-60 ' src='phone.png' alt='gg'></img>
         </div>
         <Parcelsit></Parcelsit>
       </div>

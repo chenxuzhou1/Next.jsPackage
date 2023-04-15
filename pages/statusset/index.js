@@ -1,8 +1,12 @@
+import { useState, useEffect } from 'react';
 import Title from '../../components/Header/Title.jsx'
+import qr from 'qrcode'
 import cookie from 'cookie'
-import Router from 'next/router'
-import { useState } from 'react';
-export default function packages(props) {
+import Router from 'next/router.js';
+export default function Welcome(props) {
+  const [qrCodeUrl, setQRCodeUrl] = useState('');
+  const [status, setStatus] = useState(false)
+  const [jiana, setJiana] = useState("working")
   const [showPopup, setShowPopup] = useState(false);
   const [showPopup1, setShowPopup1] = useState(false);
   const parcelsWithTrackingId = props.data.parcels.map((parcel, index) => ({
@@ -36,19 +40,62 @@ export default function packages(props) {
     document.cookie = cookie.serialize('phone_No', '', { expires: new Date(0) });
     document.cookie = cookie.serialize('pickup_status', '', { expires: new Date(0) });
     document.cookie = cookie.serialize('schoolCode', '', { expires: new Date(0) });
+    document.cookie = cookie.serialize('password', '', { expires: new Date(0) });
+        document.cookie = cookie.serialize('status', '', { expires: new Date(0) });
+        document.cookie = cookie.serialize('statusvalue', '', { expires: new Date(0) });
     
 
     Router.push("http://localhost:3000/")
   }
+  useEffect(() => {
+    const generate = async () => {
+      const qrCodeDataUrl = await qr.toDataURL('http://100.77.66.121:3000/test');
+      setQRCodeUrl(qrCodeDataUrl);
+    };
+    generate();
+  })
+
+  var uname = props.cookies.username
+  var cus = props.cookies.status
+
+  async function handleClick(e) {
+
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/statusset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uname,
+          status,
+
+        })
+      });
+
+      const data = await response.json();
+
+      setStatus(!status)
+      console.log(status)
+      if (status == true) {
+        setJiana("On")
+      }
+      else {
+        setJiana("Off")
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
 
 
+
+
+  }
   return (
 
-    <div className='bg-gradient-to-l from-slate-500 to-indigo-500 h-screen'>
-
-      {/* Header */}
-
-
+    <div className='bg-gradient-to-l from-slate-500 to-indigo-500 '>
       <div className='grid grid-cols-2 p-1 sticky top-0 z-50 bg-white' >
         <div className='flex'>
           <div><Title /></div>
@@ -77,56 +124,24 @@ export default function packages(props) {
             </div>
             <button onClick={(tozero)} className=' text-xl font-bold p-6 '>Sign out</button>
           </div>
-        </div>
+          </div>
+          </div>
+      <div className="container py-12 px-6 h-full xl:w-9/12 pl-96  ">
+        {status ?
+          <div className="flex flex-col justify-center place-items-center h-screen pt-10 rounded-xl shadow-lg'bg-gradient-to-l from-slate-500 to-indigo-500 ">
+            <button onClick={handleClick} className='bg-green-400 rounded-full h-60 w-60'>
+              <h1 className=' text-red-400  text-3xl '>{jiana}</h1>
+              <h2 className='text-white '>Press to change status</h2>
+            </button>
+          </div> :
+          <div className="flex flex-col justify-center place-items-center h-screen pt-10 rounded-xl shadow-lg'bg-gradient-to-l from-slate-500 to-indigo-500 ">
+            <button onClick={handleClick} className='bg-red-400 rounded-full h-60 w-60'>
+              <h1 className=' text-green-400  text-3xl '>{jiana}</h1>
+              <h2 className='text-white '>Press to change status</h2>
+            </button>
+          </div>}
 
-      </div>
-      <h1 className='text-5xl text-white pl-20 pt-10'>{props.cookies.username}'s Stack Package List</h1>
-      <div className='flex flex-row'>
-        <h3 className='pl-20 text-white text-2xl'>School area code:</h3>
-        <h3 className='text-red-500 pl-5 text-2xl'>{props.cookies.schoolCode}</h3>
-      </div>
-      <div className='pt-6 pl-20'>
 
-        <table>
-          <thead>
-            <tr>
-              <th className='text-white border-2'>ID</th>
-              <th className='text-white border-2'>Express Tracking Number</th>
-              <th className='text-white border-2'>Account Name</th>
-              <th className='text-white border-2'>Address</th>
-              <th className='text-white border-2'>Phone No</th>
-              <th className='text-white border-2'>Email</th>
-              <th className='text-white border-2'>Courier</th>
-              <th className='text-white border-2'>Order Created Time</th>
-              <th className='text-white border-2'>Warehouse Time</th>
-              <th className='text-white border-2'>Pickup Status</th>
-              <th className='text-white border-2'>Delayed Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {parcelsWithTrackingId.map((parcel) => (
-              <tr key={parcel.tracking_id}>
-                <td className='text-white border-2'>{parcel.tracking_id}</td>
-                <td className='text-white border-2'>{parcel.express_tracking_number}</td>
-                <td className='text-white border-2'>{parcel.account_name}</td>
-                <td className='text-white border-2'>{parcel.address}</td>
-                <td className='text-white border-2'>{parcel.phone_No}</td>
-                <td className='text-white border-2'>{parcel.email}</td>
-                <td className='text-white border-2'>{parcel.courier}</td>
-                <td className='text-white border-2'>{parcel.order_created_time}</td>
-                <td className='text-white border-2'>{parcel.warehouse_time}</td>
-                <td className={parcel.pickup_status ? 'text-green-600 border-2' : 'text-red-600 border-2'}>
-                  {parcel.pickup_status ? 'Delivered' : 'Not delivered'}
-                </td>
-                <td className='text-white border-2'>{parcel.expired}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className='flex flex-row justify-end  pt-5 space-x-4 pr-10'>
-         
-        </div>
       </div>
     </div>
   )

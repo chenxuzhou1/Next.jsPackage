@@ -1,5 +1,5 @@
 import Router, { useRouter } from 'next/router'
-import React, { useState, useRef} from 'react'
+import React, { useState, useRef } from 'react'
 import jwt from 'jsonwebtoken'
 import Title from '../../components/Header/Title.jsx'
 import ListMenu from '../../components/Header/Listmenu.jsx'
@@ -17,14 +17,24 @@ import Modal from 'react-modal';
 
 export default function Home(props) {
     const router = useRouter();
+    const [showPassword, setShowPassword] = useState(false);
     const [selectedraining, setSelectedraining] = useState(false);
     const [selectedfoggy, setSelectedfoggy] = useState(false);
     const [selectedsnowing, setSelectedsnowing] = useState(false);
+    const [oldpassword, setOldpassword] = useState('');
+    const [newpassword, setNewpassword] = useState('');
+    const [repeatNewPassword, setRepeatNewPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [address, setAddress] = useState('');
+    const [phoneNo, setPhoneNo] = useState('');
+    const [schoolCode, setSchoolcode] = useState('');
     const [distance, setDistance] = useState('');
     const [windlevel, setWindlevel] = useState('');
     const [parcelsize, setParcelsize] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [predict,setPredict]=useState("")
+    const [isModalOpen2, setIsModalOpen2] = useState(false);
+    const [isModalOpen3, setIsModalOpen3] = useState(false);
+    const [predict, setPredict] = useState("")
     const handleraining = (event) => {
         setSelectedraining(event.target.id === "true" ? true : false);
 
@@ -45,6 +55,9 @@ export default function Home(props) {
     const [isChecked, setIsChecked] = useState(false);
     const [checkedCheckboxes, setCheckedCheckboxes] = useState([]);
     const uname = props.cookies.username
+    const [passwordMessage, setPasswordMessage] = useState('')
+    const [passwordMessage1, setPasswordMessage1] = useState('')
+    const [passwordMessage2, setPasswordMessage2] = useState('')
     const handleCheckboxChange = (event) => {
         const trackingNumber = event.target.value;
         const isChecked = event.target.checked;
@@ -54,6 +67,66 @@ export default function Home(props) {
             setCheckedCheckboxes(checkedCheckboxes.filter((item) => item !== trackingNumber));
         }
     };
+    async function Modifypassword(e) {
+
+        setIsModalOpen3(true);
+        e.preventDefault();
+        try {
+            const response = await fetch('/api/Homepage3', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    oldpassword,
+                    newpassword
+
+                })
+            });
+
+            const data = await response.json();
+            console.log(data)
+            if (data == 'your password reset successfully') {
+                setPasswordMessage2("your password reset successfully")
+                console.log(passwordMessage)
+            }
+            else {
+                setPasswordMessage2("your current password is wrong")
+                console.log(passwordMessage)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function Modify(e) {
+
+        setIsModalOpen2(true);
+        e.preventDefault();
+        try {
+            const response = await fetch('/api/Homepage2', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    phoneNo,
+                    address,
+                    schoolCode,
+                    uname
+
+                })
+            });
+
+            const data = await response.json();
+
+            console.log(data)
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
     function checkboxes() {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
@@ -77,7 +150,7 @@ export default function Home(props) {
         e.preventDefault();
         setShowPopup(!showPopup);
     }
-    
+
     // const message = router.query.message
     // const contact = router.query.contact
     // const schoolCode = router.query.schoolCode
@@ -96,6 +169,11 @@ export default function Home(props) {
         document.cookie = cookie.serialize('phoneNo', '', { expires: new Date(0) });
         document.cookie = cookie.serialize('Identity', '', { expires: new Date(0) });
         document.cookie = cookie.serialize('schoolCode', '', { expires: new Date(0) });
+        document.cookie = cookie.serialize('address', '', { expires: new Date(0) });
+        document.cookie = cookie.serialize('predict', '', { expires: new Date(0) });
+        document.cookie = cookie.serialize('password', '', { expires: new Date(0) });
+        document.cookie = cookie.serialize('status', '', { expires: new Date(0) });
+        document.cookie = cookie.serialize('statusvalue', '', { expires: new Date(0) });
         window.alert('Quit Successfully')
         Router.push("http://localhost:3000/")
     }
@@ -103,7 +181,11 @@ export default function Home(props) {
         setCurrentContent(content)
 
     }
-
+    function samerepeat() {
+        if (!(newpassword === repeatNewPassword)) {
+            setPasswordMessage("your new password does not match")
+        }
+    }
     async function submitFrom(e) {
 
         e.preventDefault();
@@ -137,30 +219,57 @@ export default function Home(props) {
 
 
     }
+    function ModalContent3() {
+        return (
+            <div className='w-96'>
+                <h1 className='text-xl text-red-400'> Are you sure to change your password?</h1>
+                <button onClick={() => Router.push("/Homepage")} className='bg-gray-400 p-3 rounded-full shadow-sm text-white'>Cancel</button>
+                <button className='bg-green-400 p-3 rounded-full shadow-sm text-white' onClick=
+                    {() => (Modifypassword, handleButtonClick(1), setIsModalOpen3(false), setOldpassword(""), setNewpassword(""))}>Sure</button>
+
+            </div>
+        );
+    }
+    function ModalContent2() {
+        return (
+            <div className='w-96'>
+                <h1 className='text-xl text-red-400'> Are you sure to modify these informaiton?</h1>
+                <ul>
+                    <li>Email:{props.cookies.email} to {email}</li>
+                    <li>PhoneNo:{props.cookies.phoneNo} to {phoneNo}</li>
+                    <li>Address:{props.cookies.address} to {address}</li>
+                    <li>schoolCode:{props.cookies.schoolCode} to {schoolCode}</li>
+                </ul>
+                <button onClick={() => Router.push("/Homepage")} className='bg-gray-400 p-3 rounded-full shadow-sm text-white'>Cancel</button>
+                <button className='bg-green-400 p-3 rounded-full shadow-sm text-white' onClick=
+                    {() => (Router.push("/Homepage"), Modify, handleButtonClick(1), setIsModalOpen2(false), setAddress(""), setEmail(""), setPhoneNo(""), setSchoolcode(""))}>sure</button>
+            </div>
+        );
+    }
     function ModalContent() {
         return (
-            <div className='bg-indigo-500 '>
-                <h1 className='text-2xl text-red-400'>{predict} days </h1>
+            <div >
+                <h1 className='text-2xl text-red-400 pl-40'>{predict} days </h1>
                 <p>before the package arrives, please be patient</p>
             </div>
         );
     }
     const customStyles = {
         content: {
-          width: '400px',
-          height: '300px',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)'
+            width: '400px',
+            height: '300px',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
         }
-      };
+    };
     async function submitFrom2(e) {
 
         setIsModalOpen(true);
 
 
         // Render the content in the new window
-        
+
         e.preventDefault();
 
         try {
@@ -219,7 +328,7 @@ export default function Home(props) {
                         <ul className='flex select-none content-center items-center'>
                             <li onClick={() => handleButtonClick(1)} className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Homepage</li>
                             <li className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'> Introduction</li>
-                            <li className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Parcel history</li>
+                            <li className='text-l font-bold  p-2 cursor-pointer  hover:text-cyan-400'>Contact</li>
 
                         </ul>
                     </div>
@@ -241,7 +350,7 @@ export default function Home(props) {
                         <li onClick={() => handleButtonClick(3)} className='text-white p-7 border-solid border-2 border-gray-800 cursor-pointer hover:text-cyan-400'>Edit your profile</li>
                         <li onClick={() => handleButtonClick(4)} className='text-white p-7 border-solid border-2 border-gray-800 cursor-pointer hover:text-cyan-400'>Predict for your parcels</li>
                         <li onClick={() => handleButtonClick(5)} className='text-white p-7 border-solid border-2 border-gray-800 cursor-pointer hover:text-cyan-400'>Check your area's Managers</li>
-                        <li className='text-white p-7 border-solid border-2 border-gray-800 cursor-pointer hover:text-cyan-400'>Privacy setting</li>
+                        <li onClick={() => handleButtonClick(6)} className='text-white p-7 border-solid border-2 border-gray-800 cursor-pointer hover:text-cyan-400'>Change Password</li>
                     </ul>
                 </div>
                 {/*45>内容*/}
@@ -250,7 +359,7 @@ export default function Home(props) {
                         <h1 className='text-5xl font-bold pl-5 pt-5'>Account overview</h1>
                         <h2 className='text-xl font-bold pl-5 pt-5'>Your Profile</h2>
                         <div>
-                            <table >
+                            <table className='table-auto'>
                                 <tbody>
                                     <tr className='border-b-2'>
                                         <td className='text-gray-300 pl-5 pt-5'>Username</td>
@@ -272,6 +381,10 @@ export default function Home(props) {
                                         <td className='text-gray-300 pl-5 pt-5'>Schoolcode</td>
                                         <td className='pl-96 pt-5'>{props.cookies.schoolCode}</td>
                                     </tr>
+                                    <tr className='border-b-2'>
+                                        <td className='text-gray-300 pl-5 pt-5'>Address</td>
+                                        <td className='pl-96 pt-5'>{props.cookies.address}</td>
+                                    </tr>
                                 </tbody>
 
 
@@ -283,6 +396,7 @@ export default function Home(props) {
                         </div>
                     </div>
                 )}
+
                 {currentContent === 2 && (
                     <div className='col-start-4 col-span-9 '>
                         <div className='pt-10 flex flex-col'>
@@ -291,7 +405,7 @@ export default function Home(props) {
                             <table class="border-collapse border border-slate-500 ...">
                                 <thead>
                                     <tr>
-                                        <th className='text-white border-2'>ID</th>
+
                                         <th className='text-white border-2'>Express Tracking Number</th>
 
                                         <th className='text-white border-2'>Address</th>
@@ -302,13 +416,13 @@ export default function Home(props) {
                                         <th className='text-white border-2'>Warehouse Time</th>
                                         <th className='text-white border-2'>Pickup Status</th>
                                         <th className='text-white border-2'>Receiving Status</th>
-                                        <td className='text-white border-2'>receiveCode</td>
+                                        <td className='text-white border-2'>Delayed Status</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {parcelsWithTrackingId.map((parcel) => (
                                         <tr key={parcel.tracking_id}>
-                                            <td className='text-white border-2'>{parcel.tracking_id}</td>
+
                                             <td className='text-white border-2' >{parcel.express_tracking_number}</td>
 
                                             <td className='text-white border-2'>{parcel.address}</td>
@@ -322,15 +436,15 @@ export default function Home(props) {
 
                                             </td>
                                             <td className='text-red-500 border-2'>None</td>
-                                            <td className='border-2'><button onClick={(e) => togglePopup1(e, parcel.QRcode, parcel.express_tracking_number)} className='bg-green-600 rounded-full shadow-sm w-32'>check your receiveCode</button></td>
-                                            {showPopup1 && (
+                                            <td className='text-white border-2'>{parcel.expired}</td>
+                                            {/* {showPopup1 && (
                                                 <div className='fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center'>
                                                     <div className='bg-white rounded-lg p-8'>
                                                         <h1 className='text-red-600 pl-3' onClick={(e) => togglePopup1(e, "", "")}>{trackingId}'s QRcode</h1>
                                                         <img src={qrcode} width='200' height='200' />
                                                     </div>
                                                 </div>
-                                            )}
+                                            )} */}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -399,34 +513,33 @@ export default function Home(props) {
                         <h2 className='text-xl font-bold pl-5 pt-5'>Email</h2>
                         <div className='pl-5'>
                             <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='text' placeholder="Email " />
+                                type='text' placeholder="Email " value={email} onChange={(event) => setEmail(event.target.value)} />
                         </div>
                         <h2 className='text-xl font-bold pl-5 pt-5'>PhoneNo</h2>
                         <div className='pl-5'>
                             <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='text' placeholder="PhoneNo " />
+                                type='text' placeholder="PhoneNo " value={phoneNo} onChange={(event) => setPhoneNo(event.target.value)} />
                         </div>
                         <h2 className='text-xl font-bold pl-5 pt-5'>Your address</h2>
                         <div className='pl-5'>
                             <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='text' placeholder="not null" />
+                                type='text' placeholder="not null" value={address} onChange={(event) => setAddress(event.target.value)} />
                         </div>
                         <h2 className='text-xl font-bold pl-5 pt-5'>schoolCode</h2>
                         <div className='pl-5'>
                             <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='text' placeholder="change your schoolcode" />
+                                type='text' placeholder="change your schoolcode" value={schoolCode} onChange={(event) => setSchoolcode(event.target.value)} />
                         </div>
-                        <h2 className='text-xl font-bold pl-5 pt-5'>Your Identity code</h2>
-                        <div className='pl-5'>
-                            <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                                type='text' placeholder="Your delovery address" />
-                        </div>
+
                         <div className='pr-32 pt-20 flex justify-end '>
                             <div className='pr-12 pt-2'>
                                 <button onClick={() => handleButtonClick(1)} className='text-gray-400'>Cancel</button>
                             </div>
                             <div className='pb-10'>
-                                <button className='bg-blue-400 w-32 h-10 rounded-full shadow-sm'>Save profile</button>
+                                <button onClick={Modify} className='bg-blue-400 w-32 h-10 rounded-full shadow-sm'>Save profile</button>
+                                <Modal isOpen={isModalOpen2} onRequestClose={() => setIsModalOpen2(false)} style={customStyles}>
+                                    <ModalContent2 />
+                                </Modal>
                             </div>
                         </div>
                     </div>
@@ -503,6 +616,7 @@ export default function Home(props) {
                                     <th className='text-black border-2'>Manager</th>
                                     <th className='text-black border-2'>email</th>
                                     <th className='text-black border-2'>phoneNo</th>
+                                    <th className='text-black border-2'>work status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -513,6 +627,8 @@ export default function Home(props) {
                                         <th className='text-black border-2'>{manager.username}</th>
                                         <th className='text-black border-2'>{manager.email}</th>
                                         <th className='text-black border-2'>{manager.phoneNo}</th>
+                                        <th className='text-black border-2'>{manager.work_status === 1 ? "online" : "offline"}</th>
+
 
 
 
@@ -524,6 +640,86 @@ export default function Home(props) {
                     </div>
                 )}
 
+                {currentContent === 6 && (
+
+                    <div className='col-start-5 col-span-7 bg-white'>
+                        <h1 className='text-5xl font-bold pl-5 pt-5'>Change your password</h1>
+                        <h2 className='text-2xl pl-5 pt-5 text-blue-500'>{passwordMessage2}</h2>
+                        <h2 className='text-xl font-bold pl-5 pt-5'>Current password</h2>
+                        <div className='pl-5'>
+                            <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                type='password' placeholder=" " value={oldpassword} onChange={(event) => setOldpassword(event.target.value)} onBlur={() => {
+                                    if (oldpassword !== props.cookies.password) {
+                                        setPasswordMessage1("Current password is wrong");
+                                    }
+                                    else {
+                                        setPasswordMessage1("")
+                                    }
+                                }} />
+                        </div>
+                        <h2 className='text-xl pl-5 pt-5 text-red-500'>{passwordMessage1}</h2>
+                        <h2 className='text-xl font-bold pl-5 pt-5'>New password</h2>
+                        <div className='pl-5'>
+                            <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                type='password' placeholder="not null " value={newpassword} onChange={(event) => setNewpassword(event.target.value)} onMouseDown={() => setShowPassword(true)}
+                                onMouseUp={() => setShowPassword(false)} onBlur={() => {
+                                    if (newpassword.length < 3 && newpassword.length > 10) {
+                                        setPasswordMessage("password must be between 3 to 16 characters");
+                                    }
+                                    let uppercase = false;
+                                    let lowercase = false;
+                                    let number = false;
+                                    for (let i = 0; i < newpassword.length; i++) {
+                                        if (newpassword[i] === newpassword[i].toUpperCase()) {
+                                            uppercase = true;
+                                        }
+                                        if (newpassword[i] === newpassword[i].toLowerCase()) {
+                                            lowercase = true;
+                                        }
+                                        if (!isNaN(newpassword[i])) {
+                                            number = true;
+                                          }
+                                    }
+                                    if (!uppercase || !lowercase) {
+                                        setPasswordMessage("Password must contain at least one uppercase and one lowercase letter");
+                                    }
+                                    else if (!number) {
+                                        setPasswordMessage("Password must contain at least one number");
+                                      } 
+                                    else {
+                                        setPasswordMessage("")
+                                    }
+                                }} />
+                        </div>
+                        <h2 className='text-xl font-bold pl-5 pt-5'>Repeat new password</h2>
+                        <div className='pl-5'>
+                            <input className="form-control block w-4/5 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                type='password' placeholder="not null" value={repeatNewPassword} onChange={(event) => setRepeatNewPassword(event.target.value)} onMouseDown={() => setShowPassword(true)}
+                                onMouseUp={() => setShowPassword(false)} onBlur={() => {
+                                    if (newpassword !== repeatNewPassword) {
+                                        setPasswordMessage("Please to sure passward same");
+                                    }
+                                    else {
+                                        setPasswordMessage("")
+                                    }
+                                }} />
+                            <h2 className='text-xl  text-red-500'>{passwordMessage}</h2>
+
+                        </div>
+
+
+
+                        <div className='pr-32 pt-20 flex justify-end '>
+                            <div className='pr-12 pt-2'>
+                                <button onClick={() => handleButtonClick(6)} className='text-gray-400'>Cancel</button>
+                            </div>
+                            <div className='pb-10'>
+                                <button onClick={Modifypassword} className='bg-blue-400 w-32 h-12 rounded-full shadow-sm'>Set new password</button>
+
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
         </div>
@@ -543,7 +739,7 @@ export async function getServerSideProps(context) {
     });
     const data = await response.json();
 
-    console.log(data);
+
     return {
         props: {
             cookies,
