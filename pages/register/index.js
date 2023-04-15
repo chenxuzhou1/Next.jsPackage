@@ -24,7 +24,7 @@ export default function Home() {
       e.preventDefault();
 
   try {
-    const response = await fetch('/api/register', {
+    const response = await fetch(process.env.APIpath +'/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

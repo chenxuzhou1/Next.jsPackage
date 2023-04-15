@@ -13,7 +13,7 @@ export default function index(){
       e.preventDefault();
 
   try {
-    const response = await fetch('/api/login2', {
+    const response = await fetch(process.env.APIpath +'/api/login2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

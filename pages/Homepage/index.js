@@ -72,7 +72,7 @@ export default function Home(props) {
         setIsModalOpen3(true);
         e.preventDefault();
         try {
-            const response = await fetch('./api/Homepage3', {
+            const response = await fetch(process.env.APIpath +'./api/Homepage3', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,7 +103,7 @@ export default function Home(props) {
         setIsModalOpen2(true);
         e.preventDefault();
         try {
-            const response = await fetch('./api/Homepage2', {
+            const response = await fetch(process.env.APIpath +'./api/Homepage2', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -191,7 +191,7 @@ export default function Home(props) {
         e.preventDefault();
 
         try {
-            const response = await fetch('./api/Homepage', {
+            const response = await fetch(process.env.APIpath +'./api/Homepage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -273,7 +273,7 @@ export default function Home(props) {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/predict', {
+            const response = await fetch(process.env.APIpath +'/api/predict', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
