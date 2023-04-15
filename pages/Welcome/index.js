@@ -6,7 +6,7 @@ import cookie from 'cookie'
 export default function Welcome(props) {
   
   const router = useRouter();
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  // const userData = JSON.parse(localStorage.getItem('userData'));
   const [redirectSeconds, setRedirectSeconds] = useState(5);
   console.log(props.cookies.selectIdentity)
   

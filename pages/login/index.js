@@ -30,24 +30,24 @@ export default function index(){
     if (data.message === 'success' && selectedIdentity=="Manager") {
       setMessage('Registration Successful!');
        Router.push("/test2")
-       localStorage.setItem('userData', JSON.stringify({
-        username,
-        password,
-        selectedIdentity:selectedIdentity,
+      //  localStorage.setItem('userData', JSON.stringify({
+      //   username,
+      //   password,
+      //   selectedIdentity:selectedIdentity,
        
         
-      }));
+      // }));
       
     } else if (data.message === 'success' && selectedIdentity=="Student"){
       setMessage('Registration Successful!');
        Router.push("/test3")
-       localStorage.setItem('userData', JSON.stringify({
-        username,
-        password,
-        selectedIdentity:selectedIdentity,
+      //  localStorage.setItem('userData', JSON.stringify({
+      //   username,
+      //   password,
+      //   selectedIdentity:selectedIdentity,
        
         
-      }));
+      // }));
       
     }
     else{

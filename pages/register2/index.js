@@ -43,14 +43,14 @@ export default function Home() {
     if (data[0].message1 === 'success' && data[1].message2==='success'&& data[2]=='') {
       setMessage1('Registration Successful!');
        Router.push("/test2")
-       localStorage.setItem('userData', JSON.stringify({
-        username,
-        email,
-        phoneNo,
-        password,
-        schoolCode,
-        Identity: selectedIdentity
-      }));
+      //  localStorage.setItem('userData', JSON.stringify({
+      //   username,
+      //   email,
+      //   phoneNo,
+      //   password,
+      //   schoolCode,
+      //   Identity: selectedIdentity
+      // }));
       
     } else if (data[0].message1!=='success'){
       setMessage1(data[0].message1);

@@ -30,13 +30,13 @@ export default function index(){
     if (data.message === 'success') {
       setMessage('Registration Successful!');
        Router.push("/Welcome")
-       localStorage.setItem('userData', JSON.stringify({
-        username,
-        password,
-        selectedIdentity:selectedIdentity,
+      //  localStorage.setItem('userData', JSON.stringify({
+      //   username,
+      //   password,
+      //   selectedIdentity:selectedIdentity,
        
         
-      }));
+      // }));
       
     } else {
       setMessage(data.message);
