@@ -154,7 +154,7 @@ export default function test(props) {
   )
 }
 export async function getStaticProps() {
-  const data = await fetch('http://127.0.0.1:3000/data.json')
+  const data = await fetch('./public/data.json')
   const json = await data.json()
 
   return {
