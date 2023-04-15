@@ -154,12 +154,13 @@ export default function test(props) {
   )
 }
 export async function getStaticProps() {
-  const data = await fetch('./public/data.json')
-  const json = await data.json()
+  const filePath = path.join(process.cwd(), 'public', 'data.json');
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const data = JSON.parse(fileContents);
 
   return {
     props: {
-      posts: json.posts
+      posts: data.posts
     }
   }
 }
