@@ -136,7 +136,7 @@ export async function getServerSideProps(context) {
   let cookies = req.headers.cookie
   cookies = cookie.parse(req.headers.cookie || '')
   console.log(cookies)
-  const response = await fetch('/api/Mhomepage', {
+  const response = await fetch('https://next-js-package-dhmy.vercel.app/Mhomepage', {
     headers: {
       'Cookie': req.headers.cookie
     }
