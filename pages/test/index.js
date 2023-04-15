@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import qr from 'qrcode'
 import Router from 'next/router'
 import MobileDetect from 'mobile-detect';
+import fs from 'fs';
+import path from 'path';
 
 
 
