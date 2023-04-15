@@ -197,7 +197,7 @@ export async function getServerSideProps(context) {
   let cookies = req.headers.cookie
   cookies = cookie.parse(req.headers.cookie || '')
   console.log(cookies)
-  const response = await fetch('/api/test3', {
+  const response = await fetch('https://fastapi-production-26d4.up.railway.app/test3', {
     
     headers: {
       'Cookie': req.headers.cookie

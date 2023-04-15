@@ -663,10 +663,12 @@ async def test(student:Modify, response: Response):
 async def test(passwordflesh:Passwordflesh, response: Response, request: Request):
     session = SessionLocal()
     username = request.cookies.get("username")
-    if Student.username == username and Student.password == passwordflesh.oldpassword:
-        session.query(Student).filter(Student.username == username and Student.password == passwordflesh.oldpassword).update({Student.password:passwordflesh.newpassword})
-    else:
+    if session.query(Student).filter(Student.username == username and Student.password == passwordflesh.oldpassword).first() is None:
         message="your current password is wrong, try again!"
+        session.close()
+        return
+    else:
+        session.query(Student).filter(Student.username == username and Student.password == passwordflesh.oldpassword).update({Student.password:passwordflesh.newpassword})
     session.commit()
     session.close() 
     response.set_cookie(key="password", value=passwordflesh.newpassword)
