@@ -175,7 +175,7 @@ export default function Home(props) {
         document.cookie = cookie.serialize('status', '', { expires: new Date(0) });
         document.cookie = cookie.serialize('statusvalue', '', { expires: new Date(0) });
         window.alert('Quit Successfully')
-        Router.push("")
+        Router.push("https://next-js-package-dhmy.vercel.app/")
     }
     function handleButtonClick(content) {
         setCurrentContent(content)
