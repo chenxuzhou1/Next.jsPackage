@@ -12,9 +12,9 @@ export default function index(){
     async function submitFrom(e) {
       e.preventDefault();
 
-      
+
   try {
-    const response = await fetch(process.env.APIpath +'/api/login2', {
+    const response = await fetch('/api/login2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
