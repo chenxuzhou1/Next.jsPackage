@@ -14,7 +14,7 @@ export default function index(){
 
 
   try {
-    const response = await fetch('https://fastapi-production-26d4.up.railway.app/login2', {
+    const response = await fetch('/api/login2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
