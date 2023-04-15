@@ -5,6 +5,8 @@ import MobileDetect from 'mobile-detect';
 import cookie from 'cookie'
 import Modal from 'react-modal';
 
+import fs from 'fs';
+import path from 'path';
 
 
 export default function test(props) {
@@ -187,13 +189,15 @@ export default function test(props) {
 }
 
 export async function getServerSideProps(context) {
-  const data = await fetch('http://127.0.0.1:3000/data.json')
-  const json = await data.json()
+  const filePath = path.join(process.cwd(), 'public', 'data.json');
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const data = JSON.parse(fileContents);
+  
   const { req } = context
   let cookies = req.headers.cookie
   cookies = cookie.parse(req.headers.cookie || '')
   console.log(cookies)
-  const response = await fetch('http://127.0.0.1:3000/api/test3', {
+  const response = await fetch('/api/test3', {
     
     headers: {
       'Cookie': req.headers.cookie
@@ -206,7 +210,7 @@ export async function getServerSideProps(context) {
     props: {
       cookies,
       data1,
-      posts: json.posts
+      posts: data.posts
     }
   }
 }

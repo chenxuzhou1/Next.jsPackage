@@ -175,7 +175,7 @@ export default function Home(props) {
         document.cookie = cookie.serialize('status', '', { expires: new Date(0) });
         document.cookie = cookie.serialize('statusvalue', '', { expires: new Date(0) });
         window.alert('Quit Successfully')
-        Router.push("http://localhost:3000/")
+        Router.push("")
     }
     function handleButtonClick(content) {
         setCurrentContent(content)
@@ -732,7 +732,7 @@ export async function getServerSideProps(context) {
     let cookies = req.headers.cookie
     cookies = cookie.parse(req.headers.cookie || '')
     console.log(cookies)
-    const response = await fetch('http://127.0.0.1:3000/api/Homepage', {
+    const response = await fetch('/api/Homepage', {
         headers: {
             'Cookie': req.headers.cookie
         }

@@ -38,7 +38,7 @@ export default function packages(props) {
     document.cookie = cookie.serialize('schoolCode', '', { expires: new Date(0) });
     
 
-    Router.push("http://localhost:3000/")
+    Router.push("")
   }
 
 
@@ -136,7 +136,7 @@ export async function getServerSideProps(context) {
   let cookies = req.headers.cookie
   cookies = cookie.parse(req.headers.cookie || '')
   console.log(cookies)
-  const response = await fetch('http://127.0.0.1:3000/api/Mhomepage', {
+  const response = await fetch('/api/Mhomepage', {
     headers: {
       'Cookie': req.headers.cookie
     }

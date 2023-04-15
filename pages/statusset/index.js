@@ -45,15 +45,15 @@ export default function Welcome(props) {
         document.cookie = cookie.serialize('statusvalue', '', { expires: new Date(0) });
     
 
-    Router.push("http://localhost:3000/")
+    Router.push("")
   }
-  useEffect(() => {
-    const generate = async () => {
-      const qrCodeDataUrl = await qr.toDataURL('http://100.77.66.121:3000/test');
-      setQRCodeUrl(qrCodeDataUrl);
-    };
-    generate();
-  })
+  // useEffect(() => {
+  //   const generate = async () => {
+  //     const qrCodeDataUrl = await qr.toDataURL('http://100.77.66.121:3000/test');
+  //     setQRCodeUrl(qrCodeDataUrl);
+  //   };
+  //   generate();
+  // })
 
   var uname = props.cookies.username
   var cus = props.cookies.status
@@ -151,7 +151,7 @@ export async function getServerSideProps(context) {
   let cookies = req.headers.cookie
   cookies = cookie.parse(req.headers.cookie || '')
   console.log(cookies)
-  const response = await fetch('http://127.0.0.1:3000/api/Mhomepage', {
+  const response = await fetch('/api/Mhomepage', {
     headers: {
       'Cookie': req.headers.cookie
     }

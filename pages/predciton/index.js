@@ -37,7 +37,7 @@ export async function getServerSideProps(context) {
   let cookies = req.headers.cookie
   cookies = cookie.parse(req.headers.cookie || '')
   console.log(cookies)
-  const response = await fetch('http://127.0.0.1:3000/api/packages', {
+  const response = await fetch('/api/packages', {
     headers: {
       'Cookie': req.headers.cookie
     }

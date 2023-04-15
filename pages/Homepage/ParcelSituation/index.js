@@ -35,7 +35,7 @@ return(
   <div className='flex  bg-blue-400'>
           <h5 className=' text-xl font-bold p-4   text-white'>Hello,{props.cookies.username}</h5>
         </div>
-  <button onClick={()=>Router.push("http://localhost:3000/")} className=' text-xl font-bold p-6 '>Sign out</button>
+  <button onClick={()=>Router.push("")} className=' text-xl font-bold p-6 '>Sign out</button>
   </div>
   </div>
   
