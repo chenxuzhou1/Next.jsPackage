@@ -72,7 +72,7 @@ export default function Home(props) {
         setIsModalOpen3(true);
         e.preventDefault();
         try {
-            const response = await fetch('./api/Homepage3', {
+            const response = await fetch('/api/Homepage3', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
