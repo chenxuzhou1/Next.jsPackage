@@ -17,7 +17,7 @@ export default function packages(props) {
     e.preventDefault();
 
     try {
-        const response = await fetch(process.env.APIpath +'/api/packages', {
+        const response = await fetch('/api/packages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ export async function getServerSideProps(context) {
   let cookies = req.headers.cookie
   cookies = cookie.parse(req.headers.cookie || '')
   console.log(cookies)
-  const response = await fetch(process.env.APIpath +'/api/packages', {
+  const response = await fetch('/api/packages', {
     headers: {
       'Cookie': req.headers.cookie
     }
