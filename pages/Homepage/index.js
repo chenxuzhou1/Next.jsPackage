@@ -88,6 +88,7 @@ export default function Home(props) {
             console.log(data)
             if (data == 'your password reset successfully') {
                 setPasswordMessage2("your password reset successfully")
+                setPasswordMessage1("")
                 console.log(passwordMessage)
             }
             else {

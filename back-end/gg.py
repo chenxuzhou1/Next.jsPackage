@@ -326,6 +326,7 @@ async def login2(user: UserLogin, response: Response):
                 parcel_id = parcel.id
                 print(parcel_id)
                 session.query(Parcel).filter(Parcel.express_tracking_number == parcel.express_tracking_number).update({Parcel.expired: True})
+                
         response.set_cookie(key="username", value=db_user2.username)
         response.set_cookie(key="email", value=db_user2.email)
         response.set_cookie(key="address", value=db_user2.address)
