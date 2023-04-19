@@ -39,7 +39,7 @@ export default function index(){
       // }));
       
     } else if (data.message === 'success' && selectedIdentity=="Student"){
-      setMessage('Registration Successful!');
+      setMessage('Login Successful!');
        Router.push("/test3")
       //  localStorage.setItem('userData', JSON.stringify({
       //   username,

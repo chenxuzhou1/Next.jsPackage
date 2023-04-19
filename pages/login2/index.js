@@ -29,7 +29,7 @@ export default function index(){
     const data = await response.json();
     console.log(data)
     if (data.message === 'success') {
-      setMessage('Registration Successful!');
+      setMessage('Login Successful!');
        Router.push("/Welcome")
       //  localStorage.setItem('userData', JSON.stringify({
       //   username,
