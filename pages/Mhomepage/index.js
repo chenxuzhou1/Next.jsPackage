@@ -73,7 +73,7 @@ export default function packages(props) {
           {/* 2 Buttons*/}
           <div className='flex justify-end'>
             <div className='flex  bg-blue-400'>
-              <h5 className=' text-xl font-bold p-4   text-white'>Hello,Manager {props.cookies.username}</h5>
+              <h5 className=' text-xs font-bold p-4   text-white'>Hello,Manager {props.cookies.username}</h5>
             </div>
             <button onClick={(tozero)} className=' text-xl font-bold p-6 '>Sign out</button>
           </div>
